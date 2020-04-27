@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using EXILED;
 using EXILED.Extensions;
@@ -10,19 +11,20 @@ namespace SCPSL_ZombieDestroy
 {
     public class EventHandlers
     {
-        private static readonly DoorAttackHandler AttackHandler = new DoorAttackHandler();
-        
+        private readonly DoorAttackHandler _attackHandler = new DoorAttackHandler();
+
         public void OnPlayerDoorInteract(ref DoorInteractionEvent ev)
         {
             Door attackedDoor = ev.Door;
             if (ev.Player.GetRole() == RoleType.Scp0492)
             {
-                Log.Info($"{ev.Player.GetNickname()} is attacking a door.");
-                if (AttackHandler.AddAttack(attackedDoor, ev.Player))
+                if (_attackHandler.AddAttack(attackedDoor, ev.Player))
                 {
-                    Log.Info("Destroyed door.");
                     attackedDoor.DestroyDoor(true);
-                    attackedDoor.Networkdestroyed = true;
+                    if (Configs.BreakUnbreakable)
+                    {
+                        attackedDoor.Networkdestroyed = true;
+                    }
                 }
             }
         }
@@ -32,17 +34,24 @@ namespace SCPSL_ZombieDestroy
 
     class DoorAttackHandler
     {
-        private static readonly Dictionary<Door, Dictionary<ReferenceHub, Stopwatch>> AttackedDoors = 
+        private int neededAttacks = 2;
+        private readonly Dictionary<Door, Dictionary<ReferenceHub, Stopwatch>> _attackedDoors = 
             new Dictionary<Door, Dictionary<ReferenceHub, Stopwatch>>();
+
+        public DoorAttackHandler()
+        {
+            if (Player.GetHubs().Count() > Configs.TwoZombiesLimit)
+            {
+                neededAttacks = 3;
+            }   
+        }
 
         public bool AddAttack(Door door, ReferenceHub player)
         {
-            if (AttackedDoors.TryGetValue(door, out Dictionary<ReferenceHub, Stopwatch> attackingPlayers))
+            if (_attackedDoors.TryGetValue(door, out Dictionary<ReferenceHub, Stopwatch> attackingPlayers))
             {
-                Log.Info("Door has been attacked before.");
                 if (attackingPlayers.ContainsKey(player))
                 {
-                    Log.Info($"{player.GetNickname()} has attacked this door before. Resetting cooldown");
                     attackingPlayers[player].Stop();
                 }
                 Stopwatch st = new Stopwatch();
@@ -51,34 +60,31 @@ namespace SCPSL_ZombieDestroy
             }
             else
             {
-                Log.Info("Door hasn't been attacked before. Setting up attacking state.");
                 Stopwatch st = new Stopwatch();
                 st.Start();
-                AttackedDoors[door] = new Dictionary<ReferenceHub, Stopwatch> {{player, st}};
+                _attackedDoors[door] = new Dictionary<ReferenceHub, Stopwatch> {{player, st}};
             }
             
-            if (AttackedDoors[door].Count >= 2)
+            if (_attackedDoors[door].Count >= neededAttacks)
             {
-                AttackedDoors.Remove(door);
+                _attackedDoors.Remove(door);
                 return true;
             }
             
-            removePlayerAttack(door, player);
+            RemovePlayerAttack(door, player);
             return false;
         }
 
-        private async void removePlayerAttack(Door door, ReferenceHub player)
+        private async void RemovePlayerAttack(Door door, ReferenceHub player)
         {
             await Task.Delay(10000);
-            Log.Info($"Time since last attack: {AttackedDoors[door][player].ElapsedMilliseconds}");
-            if (AttackedDoors[door][player].ElapsedMilliseconds >= 10000)
+            if (_attackedDoors[door][player].ElapsedMilliseconds >= 10000)
             {
-                AttackedDoors[door][player].Stop();
-                AttackedDoors[door].Remove(player);
-                if (AttackedDoors[door].Count == 0)
+                _attackedDoors[door][player].Stop();
+                _attackedDoors[door].Remove(player);
+                if (_attackedDoors[door].Count == 0)
                 {
-                    Log.Info("Door has no attackers.");
-                    AttackedDoors.Remove(door);
+                    _attackedDoors.Remove(door);
                 }
             }
         }

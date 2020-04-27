@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using EXILED;
 
 namespace SCPSL_ZombieDestroy
@@ -9,13 +10,18 @@ namespace SCPSL_ZombieDestroy
         private string _name = "ZombieDestroy";
 
         private EventHandlers _handlers;
-        
+
         public override void OnEnable()
         {
             Log.Info("Enabling ZombieDestroy");
-            Log.Info("Registering event handlers");
             try
             {
+                Log.Info("Loading Config");
+                Configs.ReloadConfigs();
+
+                if (!Configs.IsEnabled) return;
+                
+                Log.Info("Registering event handlers");
                 _handlers = new EventHandlers();
                 Events.DoorInteractEvent += _handlers.OnPlayerDoorInteract;
             }
@@ -27,6 +33,8 @@ namespace SCPSL_ZombieDestroy
 
         public override void OnDisable()
         {
+            if (!Configs.IsEnabled) return;
+            
             Log.Info("De-registering event handlers");
             Events.DoorInteractEvent -= _handlers.OnPlayerDoorInteract;
             _handlers = null;
@@ -39,5 +47,6 @@ namespace SCPSL_ZombieDestroy
         }
 
         public override string getName { get => _name; }
+        
     }
 }
