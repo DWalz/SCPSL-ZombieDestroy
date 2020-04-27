@@ -2,7 +2,7 @@
 
 Zombies feeling underwhelming and having too little impact on games? They now can destroy
 doors as a group - even those that usually have to be opened by keycards. This makes
-experience as SCP 049-2 a little more exciting that rust running around and right-clicking.
+experience as SCP 049-2 a little more exciting than just running around and right-clicking.
 
 Built on the EXILED framework for SCP: Secret Laboratory
 
