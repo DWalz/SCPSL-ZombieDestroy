@@ -18,4 +18,5 @@ Restart the server and have fun
 🔗 Links:
 
 Exiled: https://github.com/galaxy119/EXILED
+
 Exiled Installer for Windows: https://github.com/RogerFK/EXILED-Windows-Installer
