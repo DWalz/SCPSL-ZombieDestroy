@@ -10,14 +10,14 @@ namespace SCPSL_ZombieDestroy
 
         public static void ReloadConfigs()
         {
-            if (!Plugin.Config.GetBool("zombie_destroy_enabled", true))
+            if (!Plugin.Config.GetBool("zd_enabled", true))
             {
                 IsEnabled = false;
                 return;
             }   
-            TwoZombiesLimit = Plugin.Config.GetInt("two_zombies_player_limit", 6);
-
-            BreakUnbreakable = Plugin.Config.GetBool("allow_unbreakable_destroy", true);
+            
+            TwoZombiesLimit = Plugin.Config.GetInt("zd_two_zombies_limit", 6);
+            BreakUnbreakable = Plugin.Config.GetBool("zd_allow_unbreakable_destroy", true);
         }
         
     }
