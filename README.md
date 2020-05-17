@@ -33,6 +33,7 @@ Restart the server and have fun
 |--------------------------------|---------------|------------------|
 | `zd_enabled`                   | `true`        | `true` / `false` |
 | `zd_two_zombies_limit`         | `6`           | `0`, `1`, ...    |
+| `zd_zombie_cooldown`           | `60`          | `0`, `1`, ...    |
 | `zd_allow_unbreakable_destroy` | `true`        | `true` / `false` |
 
 **`zd_enabled`**: If the plugin is enabled. If set to `false`, 
@@ -41,6 +42,10 @@ the event listeners and handlers wont be registered.
 **`zd_two_zombies_limit`**: There are either `2` or `3` zombies required to force
 open doors. This number indicated the threshold, the maximum number of players in the game
 where there are still only `2` zombies required to do so.
+
+**`zd_zombie_cooldown`**: The cooldown for one zombie to participate in a door break in seconds.
+After a successful break a zombie will no longer be able to force open doors until this time has
+elapsed.
 
 **`zd_allow_unbreakable_destroy`**: This value indiates if zombies are allowed to force open
 doors that usually cannot be exploded by grenades. Examples of such doors are the gate doors
@@ -53,5 +58,6 @@ which can lead to graphics issues and such.
 ```yaml
 zd_enabled: true
 zd_two_zombies_limit: 6
+zd_zombie_cooldown: 60
 zd_allow_unbreakable_destroy: true
 ```
