@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using EXILED;
 
 namespace SCPSL_ZombieDestroy

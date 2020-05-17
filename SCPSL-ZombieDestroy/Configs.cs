@@ -7,6 +7,7 @@ namespace SCPSL_ZombieDestroy
         internal static bool IsEnabled = true;
         internal static int TwoZombiesLimit;
         internal static bool BreakUnbreakable;
+        internal static int ZombieCooldown;
 
         public static void ReloadConfigs()
         {
@@ -18,6 +19,7 @@ namespace SCPSL_ZombieDestroy
             
             TwoZombiesLimit = Plugin.Config.GetInt("zd_two_zombies_limit", 6);
             BreakUnbreakable = Plugin.Config.GetBool("zd_allow_unbreakable_destroy", true);
+            ZombieCooldown = Plugin.Config.GetInt("zd_zombie_cooldown", 60);
         }
         
     }
