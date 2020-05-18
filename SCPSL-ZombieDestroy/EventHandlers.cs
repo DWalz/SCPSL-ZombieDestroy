@@ -32,7 +32,7 @@ namespace SCPSL_ZombieDestroy
 
     class DoorAttackHandler
     {
-        private readonly int _neededAttacks = 1;
+        private readonly int _neededAttacks = 2;
         private readonly Dictionary<Door, Dictionary<ReferenceHub, Stopwatch>> _attackedDoors = 
             new Dictionary<Door, Dictionary<ReferenceHub, Stopwatch>>();
         private readonly Dictionary<ReferenceHub, Stopwatch> _zombieCooldowns = new Dictionary<ReferenceHub, Stopwatch>();
